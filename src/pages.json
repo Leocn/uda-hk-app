@@ -1,0 +1,104 @@
+{
+	"easycom": {
+		"autoscan": true,
+		// 注意一定要放在 custom 里，否则无效，https://ask.dcloud.net.cn/question/131175
+		"custom": {
+			"^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue",
+			// uni-ui 规则如下配置
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [ //pages 数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/tracking/tracking",
+			"style": {
+				"navigationBarTitleText": "包裹",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/service/service",
+			"style": {
+				"navigationBarTitleText": "业绩"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/login/privacy",
+			"style": {
+				"navigationBarTitleText": "服务条款"
+			}
+		},
+		{
+			"path": "pages/webview/webview",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#000",
+		"borderStyle": "black",
+		"backgroundColor": "#FFF",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/image/home.png",
+				"selectedIconPath": "static/image/on_home.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/service/service",
+				"iconPath": "static/image/product.png",
+				"selectedIconPath": "static/image/on_product.png",
+				"text": "包裹"
+			},
+			{
+				"pagePath": "pages/tracking/tracking",
+				"iconPath": "static/image/tracking.png",
+				"selectedIconPath": "static/image/on_tracking.png",
+				"text": "业绩"
+			},
+			{
+				"pagePath": "pages/my/my",
+				"iconPath": "static/image/my.png",
+				"selectedIconPath": "static/image/on_my.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "韵达国际",
+		"navigationBarBackgroundColor": "#FFF",
+		"backgroundColor": "#F8F8F8"
+	},
+	// 分包
+	"subPackages": [
+	],
+	//分包预下载
+	"preloadRule": {
+	}
+}
