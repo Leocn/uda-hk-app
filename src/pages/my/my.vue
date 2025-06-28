@@ -1,5 +1,5 @@
 <template>
-  <view class="my-page">
+  <View class="my">
     <view class="top">
       <view class="profile">
         <!-- 已登录 -->
@@ -28,39 +28,16 @@
         </view>
       </view>
     </view>
-    <view class="container">
-      <view class="board mb-12">
-        <view class="flex-card share-card">
-          <custom-ratio-image src="/static/image/share.png" width="32" height="32" align="middle"></custom-ratio-image>
-          <text class="">分享有礼</text>
-          <button class="share-button" open-type="share"></button>
-        </view>
-        <view class="flex-card">
-          <custom-ratio-image src="/static/image/test.png" width="32" height="32" align="middle"></custom-ratio-image>
-          <text class="">敬请期待</text>
-        </view>
-      </view>
-      <view class="list">
-        <up-cell-group :border="false">
-          <up-cell icon="setting-fill" title="账户信息" url="/pageMember/setting/setting" is-link>
-            <template #icon>
-              <up-image width="20px" height="20px" src="/static/image/setting.png"></up-image>
-            </template>
-          </up-cell>
-          <!-- <up-cell icon="map-fill" title="地址管理" url="/pages/addressBook/addressBook" is-link>
-            <template #icon>
-              <up-image width="20px" height="20px" src="/static/image/address.png"></up-image>
-            </template>
-          </up-cell> -->
-          <up-cell icon="phone-fill" :border="false" title="联系客服" is-link @click="makePhoneCall">
-            <template #icon>
-              <up-image width="20px" height="20px" src="/static/image/phone.png"></up-image>
-            </template>
-          </up-cell>
-        </up-cell-group>
-      </view>
+    <view class="my-list">
+      <up-cell-group :border="false">
+        <up-cell icon="setting-fill" title="账户信息" url="/pageMember/setting/setting" is-link>
+          <template #icon>
+            <up-image width="20px" height="20px" src="/static/image/setting.png"></up-image>
+          </template>
+        </up-cell>
+      </up-cell-group>
     </view>
-  </view>
+  </View>
 </template>
 
 <script setup>
@@ -69,17 +46,6 @@ import { useMemberStore } from '@/stores';
 import { maskPhoneNumber } from '../../util';
 
 const memberStore = useMemberStore();
-const makePhoneCall = () => {
-  uni.makePhoneCall({
-    phoneNumber: '021-39296235',
-    success: () => {
-      console.log('拨打电话成功');
-    },
-    fail: () => {
-      console.log('拨打电话失败');
-    },
-  });
-};
 </script>
 
 <style lang="scss" scoped>
@@ -87,15 +53,14 @@ page {
   height: 100%;
 }
 
-.my-page {
+.my {
   height: 100%;
 }
 .top {
   height: 250rpx;
-  background: linear-gradient(0deg, #fffcf9 0%, #ffd166 100%);
+  background: linear-gradient(180deg, #ffd166 0%, rgba(255, 209, 102, 0) 100%);
   filter: blur(0px);
-  opacity: var(0.7);
-  padding-top: 60px;
+  padding-top: 30px;
 }
 .profile {
   .overview {
@@ -140,47 +105,10 @@ page {
     right: 40rpx;
   }
 }
-.container {
-  position: relative;
-}
-.board {
-  position: absolute;
-  top: -35px;
-  left: 0;
-  right: 0;
-  padding: 0 15px;
-  display: flex;
-  justify-content: space-between;
-  .flex-card {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-sizing: border-box;
-    width: 45%;
-    height: 70px;
-    border-radius: 8px;
-    padding: 12px;
-    background-color: #fff;
-  }
-}
-.list {
-  margin-top: 45px;
+
+.my-list {
+  margin: 12px;
   border-radius: 12px;
   background: #fff;
-}
-.share-card {
-  position: relative;
-}
-.share-button {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  opacity: 0;
-  font-size: 16px;
-  &::after {
-    border: none;
-  }
 }
 </style>

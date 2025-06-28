@@ -1,14 +1,5 @@
 //白名单 不需要验证token
-const whiteList = [
-  '/',
-  '/pages/index/index',
-  '/pages/login/login',
-  '/pages/login/privacy',
-  '/pages/my/my',
-  '/pages/tracking/tracking',
-  '/pages/timeCost/timeCost',
-  '/pages/service/service',
-];
+const whiteList = ['/', '/pages/login/login'];
 //登录页
 const loginPage = '/pages/login/login';
 export default function initPermission() {

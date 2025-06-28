@@ -19,7 +19,7 @@
 			}
 		},
 		{
-			"path": "pages/tracking/tracking",
+			"path": "pages/parcel/parcel",
 			"style": {
 				"navigationBarTitleText": "包裹",
 				"enablePullDownRefresh": false
@@ -33,7 +33,7 @@
 			}
 		},
 		{
-			"path": "pages/service/service",
+			"path": "pages/performance/performance",
 			"style": {
 				"navigationBarTitleText": "业绩"
 			}
@@ -41,19 +41,37 @@
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
 			"path": "pages/login/privacy",
 			"style": {
-				"navigationBarTitleText": "服务条款"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
 			"path": "pages/webview/webview",
 			"style": {
 				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/setting/setting",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
+		},
+		{
+			"path": "pages/inbound/inbound",
+			"style": {
+				"navigationBarTitleText": "入库"
+			}
+		},
+		{
+			"path": "pages/outbound/outbound",
+			"style": {
+				"navigationBarTitleText": "出库"
 			}
 		}
 	],
@@ -70,16 +88,10 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/service/service",
-				"iconPath": "static/image/product.png",
-				"selectedIconPath": "static/image/on_product.png",
+				"pagePath": "pages/parcel/parcel",
+				"iconPath": "static/image/parcel.png",
+				"selectedIconPath": "static/image/on_parcel.png",
 				"text": "包裹"
-			},
-			{
-				"pagePath": "pages/tracking/tracking",
-				"iconPath": "static/image/tracking.png",
-				"selectedIconPath": "static/image/on_tracking.png",
-				"text": "业绩"
 			},
 			{
 				"pagePath": "pages/my/my",
@@ -96,9 +108,7 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	// 分包
-	"subPackages": [
-	],
+	"subPackages": [],
 	//分包预下载
-	"preloadRule": {
-	}
+	"preloadRule": {}
 }

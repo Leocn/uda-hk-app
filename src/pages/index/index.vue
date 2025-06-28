@@ -1,20 +1,41 @@
 <template>
   <view class="index">
-    <view class="mb-12 index-banner"> </view>
-    <view class="index-statistic">
-      <view></view>
+    <view class="index-banner mb-12">
+      <swiper autoplay circular interval="3000" duration="500">
+        <swiper-item v-for="(item, index) in bannerList" :key="index">
+          <image :src="item" style="height: 100%; width: 100%" mode="aspectFill"></image>
+        </swiper-item>
+      </swiper>
+    </view>
+    <view class="index-statistic card mb-12">
+      <view v-for="(item, index) in statisticList" :key="index">
+        <view :key="index" class="index-statistic-group">
+          <view class="title">{{ item.title }}</view>
+          <view class="value">{{ item.value }}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="index-action">
+      <view class="index-action-item card" @click="navigateToPage('/pages/inbound/inbound')">
+        <view class="text">入库</view>
+      </view>
+      <view class="index-action-item card" @click="navigateToPage('/pages/outbound/outbound')">
+        <view class="text">出库</view>
+      </view>
     </view>
   </view>
 </template>
 
 <script setup>
 import { onLoad } from '@dcloudio/uni-app';
-import { useI18n } from 'vue-i18n';
 import { ref, reactive, computed, nextTick } from 'vue';
 import { navigateToPage } from '@/util';
-import { useProductStore, useMemberStore, useSceneStore } from '@/stores';
+import { useMemberStore } from '@/stores';
 
-const statisticList = ref([
+const bannerList = reactive(['/static/image/slider_1.jpg']);
+
+const statisticList = reactive([
   {
     title: '今日已入库',
     value: 0,
@@ -32,11 +53,30 @@ const statisticList = ref([
 
 <style lang="scss" scoped>
 .index-banner {
-  height: 300rpx;
-  background: linear-gradient(0deg, #fffcf9 0%, #ffd166 100%);
-  filter: blur(0px);
-  opacity: var(0.7);
+  overflow: hidden;
 }
 .index-statistic {
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+  border-radius: 8px;
+}
+.index-statistic-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.index-action {
+  display: flex;
+  justify-content: space-around;
+}
+.index-action-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  font-size: 16px;
+  font-weight: 700;
 }
 </style>

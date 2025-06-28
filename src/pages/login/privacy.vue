@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="privacy">
     <view v-html="policy.html"></view>
   </view>
 </template>
@@ -8,4 +8,9 @@
 import policy from '../../config/policy';
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.privacy {
+  padding: 15px;
+  background-color: #fff;
+}
+</style>

@@ -4,12 +4,13 @@
       <image src="/static/image/uda-logo.png"></image>
     </view>
     <view class="login">
-      <!-- 网页端表单登录 -->
-      <!-- #ifdef H5 -->
       <view class="input">
         <up-input v-model="form.mobile" shape="circle" type="number" placeholder="请输入手机号码" />
       </view>
       <view class="input">
+        <up-input v-model="form.validateNo" shape="circle" type="number" placeholder="请输入密码" />
+      </view>
+      <!-- <view class="input">
         <up-input v-model="form.validateNo" shape="circle" placeholder="请输入验证码">
           <template #suffix>
             <view>
@@ -23,7 +24,7 @@
             </view>
           </template>
         </up-input>
-      </view>
+      </view> -->
 
       <button
         :disabled="disabled"
@@ -33,18 +34,7 @@
       >
         登录
       </button>
-      <!-- #endif -->
 
-      <!-- 小程序端授权登录 -->
-      <!-- #ifdef MP-WEIXIN -->
-      <view class="button-privacy-wrap">
-        <button :hidden="isAgreePrivacy" class="button-opacity button phone" @tap="checkedAgreePrivacy"></button>
-        <button type="primary" class="button" open-type="getPhoneNumber" @getphonenumber="onGetphonenumber">
-          <text class="icon icon-phone"></text>
-          手机号快捷登录
-        </button>
-      </view>
-      <!-- #endif -->
       <!--  判断是否勾选协议 -->
       <view class="tips" :class="{ animate__shakeY: isAgreePrivacyShakeY }">
         <up-checkbox v-model:checked="isAgreePrivacy" active-color="#fcc800" name="agree" shape="circle" used-alone>
@@ -78,33 +68,6 @@ import { useMemberStore } from '@/stores';
 import { onLoad } from '@dcloudio/uni-app';
 import { reactive, ref, watch } from 'vue';
 
-// #ifdef MP-WEIXIN
-let loginCode = '';
-onLoad(async () => {
-  const res = await wx.login();
-  loginCode = res.code;
-});
-
-// 获取用户手机号码
-const onGetphonenumber = async (ev) => {
-  if (ev.detail.errMsg == 'getPhoneNumber:fail user deny') {
-    console.log('用户拒绝');
-    return;
-  }
-  const { code: mobileCode } = ev.detail;
-  try {
-    loading.value = true;
-    const res = await weChatLoginAPI({ mobileCode, code: loginCode });
-    loginSuccess(res);
-  } catch (e) {
-    console.log(e);
-  } finally {
-    loading.value = false;
-  }
-};
-// #endif
-
-// #ifdef H5
 // 表单登录
 const tips = ref('');
 const uCodeRef = ref(null);
@@ -164,7 +127,16 @@ const onSubmit = async () => {
   try {
     await checkedAgreePrivacy();
     loading.value = true;
-    const res = await mobileLoginAPI(form);
+    // const res = await mobileLoginAPI(form);
+    const res = {
+      id: 14,
+      phone: '17621800204',
+      wxOpenid: 'oqkck7UeQvUzR93yfwDvOaQMfQ1k',
+      createTime: '2024-10-10 10:55:20',
+      level: 0,
+      token:
+        'eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoieWQiLCJqdGkiOiIxNCIsInN1YiI6IjE0IiwiaWF0IjoxNzUwOTk0MjIxLCJleHAiOjE3NTM1ODYyMjF9.NLrwg6YqUlyU_Ws2ISH1PMBh8g45GrdjYOS2qPC_JG8',
+    };
     loginSuccess(res);
   } catch (e) {
     console.log(e);
@@ -172,19 +144,13 @@ const onSubmit = async () => {
     loading.value = false;
   }
 };
-// #endif
 
 const loading = ref(false);
 const loginSuccess = (profile) => {
   // 保存会员信息
   const memberStore = useMemberStore();
   memberStore.setProfile(profile);
-  uni.navigateBack();
-  // 成功提示
-  // uni.showToast({ icon: 'success', title: '登录成功' });
-  // setTimeout(() => {
-  //   uni.navigateBack();
-  // });
+  uni.switchTab({ url: '/pages/index/index' });
 };
 
 // 请先阅读并勾选协议
@@ -210,6 +176,7 @@ const checkedAgreePrivacy = async () => {
 <style lang="scss">
 page {
   height: 100%;
+  background: #fff;
 }
 
 .viewport {

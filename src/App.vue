@@ -1,9 +1,24 @@
 <script>
-import initPermission from './router';
 export default {
   onLaunch: function () {
-    initPermission();
-    console.log('App Launch');
+    const token = uni.getStorageSync('token');
+    if (!token) {
+      // 未登录时跳转至登录页，并关闭启动页
+      uni.reLaunch({
+        url: '/pages/login/login',
+        success: () => {
+          // 手动关闭启动页（解决跳转闪烁）
+          // #ifdef APP-PLUS
+          //plus.navigator.closeSplashscreen();
+          // #endif
+        },
+      });
+    } else {
+      // 已登录时直接关闭启动页
+      // #ifdef APP-PLUS
+      //plus.navigator.closeSplashscreen();
+      // #endif
+    }
   },
   onShow: function () {
     console.log('App Show');
