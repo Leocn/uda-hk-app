@@ -18,9 +18,11 @@
 
     <view class="index-action">
       <view class="index-action-item card" @click="navigateToPage('/pages/inbound/inbound')">
+		<image src="/static/image/inbound.png" style="height: 48px; width: 48px"></image>
         <view class="text">入库</view>
       </view>
       <view class="index-action-item card" @click="navigateToPage('/pages/outbound/outbound')">
+		<image src="/static/image/outbound.png" style="height: 48px; width: 48px"></image>
         <view class="text">出库</view>
       </view>
     </view>
@@ -66,6 +68,7 @@ const statisticList = reactive([
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 .index-action {
   display: flex;
@@ -73,6 +76,7 @@ const statisticList = reactive([
 }
 .index-action-item {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 40%;

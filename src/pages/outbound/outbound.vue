@@ -1,7 +1,6 @@
 <template>
   <view class="outbound">
     <view class="outbound-scan"> </view>
-
     <view class="outbound-input">
       <view class="outbound-input-label">运单号</view>
       <up-input
@@ -24,7 +23,7 @@
         </template>
       </up-input>
     </view>
-    <view class="inbound-confirm">
+    <view class="outbound-confirm">
       <up-button
         text="确认"
         shape="circle"
@@ -32,21 +31,29 @@
         @tap="handleConfirm"
       ></up-button>
     </view>
-    <view v-if="trackingNoList.length > 0" class="inbound-table">
+    <view v-if="trackingNoList.length > 0" class="outbound-table">
       <scroll-view scroll-y="true" style="max-height: 350px">
-        <up-table>
-          <up-tr>
-            <up-th>运单号</up-th>
-            <up-th>操作</up-th>
-          </up-tr>
-          <up-tr v-for="(item, index) in trackingNoList" :key="index">
-            <up-td>{{ item.trackingNo }}</up-td>
-            <up-td style="color: red" @click="handleDelete(index)">删除</up-td>
-          </up-tr>
-        </up-table>
+        <uni-table ref="table" border stripe>
+          <uni-tr>
+            <uni-th width="150" align="center">运单号</uni-th>
+            <uni-th width="80" align="center">操作</uni-th>
+          </uni-tr>
+          <uni-tr v-for="(item, index) in trackingNoList" :key="index">
+            <uni-td align="center">
+              {{ item.trackingNo }}
+            </uni-td>
+            <uni-td align="center">{{ item.shelfNumber }}</uni-td>
+            <uni-td align="center">
+              <view class="outbound-table-button">
+                <up-icon name="trash" color="#FF0000" size="18" @click="handleDelete(index)"></up-icon>
+              </view>
+            </uni-td>
+          </uni-tr>
+        </uni-table>
       </scroll-view>
     </view>
-    <view class="inbound-upload">
+    <view class="outbound-upload">
+      <view class="aggregate">{{ '合计：' + trackingNoList.length }}</view>
       <up-button
         text="上传"
         shape="circle"
@@ -63,7 +70,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage.js';
 import { pushTrackingAPI } from '@/config/api.js';
 
 const trackingNo = ref('');
-const { trackingNoList, addItem, removeItem, clearData, autoLoad } = useLocalStorage('outbound_tracking_list', []);
+const { trackingNoList, addItem, removeItem, saveToLocal, autoLoad } = useLocalStorage('outbound_tracking_list', []);
 autoLoad();
 
 const handleDelete = (index) => {
@@ -142,9 +149,17 @@ const handleUpload = async () => {
       dataList: trackingNoList,
     };
     const res = await pushTrackingAPI(data);
+    if (res.code === 200 && res.data && Array.isArray(res.data)) {
+      const successTrackingNumbers = res.data.filter((item) => item.code === 200).map((item) => item.trackingNo);
+      const failedItems = res.data.filter((item) => item.code !== 200);
 
-    clearData();
-    trackingNo.value = '';
+      for (let i = trackingNoList.length - 1; i >= 0; i--) {
+        if (successTrackingNumbers.includes(trackingNoList[i].trackingNo)) {
+          trackingNoList.splice(i, 1);
+        }
+      }
+      saveToLocal();
+    }
   } catch (error) {
     uni.showToast({
       title: '上传失败，请稍后再试',
@@ -172,16 +187,27 @@ const handleUpload = async () => {
   flex: 1;
   background: #fff;
 }
-.inbound-confirm {
+.outbound-confirm {
   margin-top: 20px;
 }
-.inbound-table {
+.outbound-table {
   margin-top: 12px;
 }
-.inbound-upload {
+.outbound-table-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.outbound-upload {
   position: fixed;
   bottom: 40px;
   right: 10px;
   width: 100px;
+}
+.aggregate {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+  font-size: 14px;
 }
 </style>

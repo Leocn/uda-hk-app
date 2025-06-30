@@ -5,26 +5,11 @@
     </view>
     <view class="login">
       <view class="input">
-        <up-input v-model="form.mobile" shape="circle" type="number" placeholder="请输入账号" />
+        <up-input v-model="form.account" shape="circle" placeholder="请输入账号" />
       </view>
       <view class="input">
-        <up-input v-model="form.validateNo" shape="circle" type="number" placeholder="请输入密码" />
+        <up-input v-model="form.password" shape="circle" placeholder="请输入密码" />
       </view>
-      <!-- <view class="input">
-        <up-input v-model="form.validateNo" shape="circle" placeholder="请输入验证码">
-          <template #suffix>
-            <view>
-              <up-code ref="uCodeRef" seconds="60" @change="codeChange"></up-code>
-              <up-button
-                :text="tips"
-                :custom-style="{ color: '#222', backgroundColor: '#fcc800' }"
-                size="mini"
-                @tap="getCode"
-              ></up-button>
-            </view>
-          </template>
-        </up-input>
-      </view> -->
 
       <button
         :disabled="disabled"
@@ -52,13 +37,6 @@
       icon-size="48"
       font-size="13"
     ></up-loading-page>
-    <custom-slider
-      ref="sliderVerifyRef"
-      verify-img="/static/image/slider_2.jpg"
-      @success="successHandle"
-      @error="errorHandle"
-      @close="closeHandle"
-    ></custom-slider>
   </view>
 </template>
 
@@ -66,54 +44,16 @@
 import { useMemberStore } from '@/stores';
 import { onLoad } from '@dcloudio/uni-app';
 import { reactive, ref, watch } from 'vue';
+import { accountLoginAPI } from '@/config/api';
+import md5 from 'js-md5';
 
 // 表单登录
-const tips = ref('');
-const uCodeRef = ref(null);
-const codeChange = (text) => {
-  tips.value = text;
-};
-
-const sliderVerifyRef = ref(null);
-
-//验证通过回调
-const successHandle = (e) => {
-  if (uCodeRef.value.canGetCode) {
-    getCodeAPI({ country: '86', mobile: form.mobile })
-      .then(() => {
-        // 这里此提示会被start()方法中的提示覆盖
-        uni.$u.toast('验证码已发送');
-        // 通知验证码组件内部开始倒计时
-        uCodeRef.value.start();
-      })
-      .catch(() => {});
-  } else {
-    uni.$u.toast('倒计时结束后再发送');
-  }
-  console.log(e);
-};
-//验证失败回调
-const errorHandle = (e) => {
-  console.log(e);
-};
-//组件关闭回调
-const closeHandle = (e) => {
-  console.log(e);
-};
-const getCode = () => {
-  if (!form.mobile) {
-    uni.$u.toast('请输入手机号码');
-    return;
-  }
-  sliderVerifyRef.value.show();
-};
-
 const form = reactive({
-  mobile: '',
-  validateNo: '',
+  account: '',
+  password: '',
 });
 const disabled = ref(true);
-watch([() => form.mobile, () => form.validateNo], ([newM, newV]) => {
+watch([() => form.account, () => form.password], ([newM, newV]) => {
   if (newM && newV) {
     disabled.value = false;
   } else {
@@ -126,16 +66,11 @@ const onSubmit = async () => {
   try {
     await checkedAgreePrivacy();
     loading.value = true;
-    // const res = await mobileLoginAPI(form);
-    const res = {
-      id: 14,
-      phone: '17621800204',
-      wxOpenid: 'oqkck7UeQvUzR93yfwDvOaQMfQ1k',
-      createTime: '2024-10-10 10:55:20',
-      level: 0,
-      token:
-        'eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoieWQiLCJqdGkiOiIxNCIsInN1YiI6IjE0IiwiaWF0IjoxNzUwOTk0MjIxLCJleHAiOjE3NTM1ODYyMjF9.NLrwg6YqUlyU_Ws2ISH1PMBh8g45GrdjYOS2qPC_JG8',
+    const data = {
+      account: form.account,
+      password: md5(form.password),
     };
+    const res = await accountLoginAPI(data);
     loginSuccess(res);
   } catch (e) {
     console.log(e);

@@ -37,7 +37,7 @@ export function useLocalStorage(storageKey, defaultValue = []) {
 
   // 添加数据
   const addItem = (item) => {
-    trackingNoList.push(item);
+    trackingNoList.unshift(item);
     saveToLocal();
   };
 
@@ -61,7 +61,7 @@ export function useLocalStorage(storageKey, defaultValue = []) {
   };
 
   return {
-    trackingNoList, // 直接返回 trackingNoList
+    trackingNoList,
     saveToLocal,
     loadFromLocal,
     clearLocal,

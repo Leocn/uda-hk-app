@@ -8,7 +8,7 @@
             <image class="avatar" mode="aspectFill" src="/static/image/avatar.png"></image>
           </navigator>
           <view class="meta">
-            <view class="nickname">{{ maskPhoneNumber(memberStore.profile.phone) }}</view>
+            <view class="nickname">{{ memberStore.profile.account }}</view>
           </view>
           <!-- <navigator class="settings" url="/pagesMember/settings/settings" hover-class="none">
             <up-icon name="setting-fill" size="24" color="#222"></up-icon>
@@ -30,7 +30,7 @@
     </view>
     <view class="my-list">
       <up-cell-group :border="false">
-        <up-cell icon="setting-fill" title="账户信息" url="/pageMember/setting/setting" is-link>
+        <up-cell icon="setting-fill" title="账户信息" url="/pages/setting/setting" is-link>
           <template #icon>
             <up-image width="20px" height="20px" src="/static/image/setting.png"></up-image>
           </template>

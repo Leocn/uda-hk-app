@@ -53,21 +53,29 @@
     </view>
     <view v-if="trackingNoList.length > 0" class="inbound-table">
       <scroll-view scroll-y="true" style="max-height: 350px">
-        <up-table>
-          <up-tr>
-            <up-td class="th" width="140px">运单号</up-td>
-            <up-td class="th">货架号</up-td>
-            <up-td class="th">操作</up-td>
-          </up-tr>
-          <up-tr v-for="(item, index) in trackingNoList" :key="index">
-            <up-td width="140px">{{ item.trackingNo || '' }}</up-td>
-            <up-td>{{ item.shelfNumber || '' }}</up-td>
-            <up-td style="color: red" @click="handleDelete(index)">删除</up-td>
-          </up-tr>
-        </up-table>
+        <uni-table ref="table" border stripe>
+          <uni-tr>
+            <uni-th width="150" align="center">运单号</uni-th>
+            <uni-th width="80" align="center">货架号</uni-th>
+            <uni-th width="80" align="center">操作</uni-th>
+          </uni-tr>
+          <uni-tr v-for="(item, index) in trackingNoList" :key="index">
+            <uni-td align="center">
+              {{ item.trackingNo }}
+            </uni-td>
+            <uni-td align="center">{{ item.shelfNumber }}</uni-td>
+            <uni-td align="center">
+              <view class="inbound-table-button">
+                <up-icon name="trash" color="#FF0000" size="18" @click="handleDelete(index)"></up-icon>
+              </view>
+            </uni-td>
+          </uni-tr>
+        </uni-table>
       </scroll-view>
     </view>
     <view class="inbound-upload">
+      <view class="aggregate">{{ '合计：' + trackingNoList.length }}</view>
+
       <up-button
         text="上传"
         shape="circle"
@@ -119,7 +127,7 @@ import { pushTrackingAPI } from '@/config/api.js';
 const shelfNumber = ref('');
 const trackingNo = ref('');
 
-const { trackingNoList, addItem, removeItem, clearData, autoLoad } = useLocalStorage('inbound_tracking_list', []);
+const { trackingNoList, addItem, removeItem, autoLoad, saveToLocal } = useLocalStorage('inbound_tracking_list', []);
 
 autoLoad();
 
@@ -142,7 +150,6 @@ const formatDateTime = () => {
 const triggerScan = (field) => {
   uni.scanCode({
     onlyFromCamera: true,
-    scanType: ['barCode'],
     success: (res) => {
       if (field === 'shelfNumber') {
         shelfNumber.value = res.result;
@@ -205,10 +212,17 @@ const handleUpload = async () => {
       dataList: trackingNoList,
     };
     const res = await pushTrackingAPI(data);
+    if (res.code === 200 && res.data && Array.isArray(res.data)) {
+      const successTrackingNumbers = res.data.filter((item) => item.code === 200).map((item) => item.trackingNo);
+      const failedItems = res.data.filter((item) => item.code !== 200);
 
-    clearData();
-    shelfNumber.value = '';
-    trackingNo.value = '';
+      for (let i = trackingNoList.length - 1; i >= 0; i--) {
+        if (successTrackingNumbers.includes(trackingNoList[i].trackingNo)) {
+          trackingNoList.splice(i, 1);
+        }
+      }
+      saveToLocal();
+    }
   } catch (error) {
     uni.showToast({
       title: '上传失败，请稍后再试',
@@ -246,10 +260,21 @@ const handleUpload = async () => {
     background-color: rgb(245, 246, 248);
   }
 }
+.inbound-table-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .inbound-upload {
   position: fixed;
   bottom: 40px;
   right: 10px;
   width: 100px;
+}
+.aggregate {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+  font-size: 14px;
 }
 </style>

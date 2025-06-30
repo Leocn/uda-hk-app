@@ -2,7 +2,7 @@
   <view class="container">
     <view class="card mb-12">
       <up-cell-group :border="false">
-        <up-cell title="手机号" :value="phone" :border="false"></up-cell>
+        <up-cell title="用户名" :value="account" :border="false"></up-cell>
       </up-cell-group>
     </view>
 
@@ -34,13 +34,13 @@ import { maskPhoneNumber } from '@/util';
 
 const memberStore = useMemberStore();
 
-const phone = computed(() => {
-  return memberStore.profile?.phone ? maskPhoneNumber(memberStore.profile.phone) : '';
+const account = computed(() => {
+  return memberStore.profile?.account;
 });
 
 const logout = () => {
   memberStore.clearProfile();
-  uni.navigateBack();
+  uni.reLaunch({ url: '/pages/login/login' });
 };
 
 const show = ref(false);
