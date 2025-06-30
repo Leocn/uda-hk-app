@@ -63,7 +63,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage.js';
 import { pushTrackingAPI } from '@/config/api.js';
 
 const trackingNo = ref('');
-const { trackingNoList, addItem, removeItem, clearData, autoLoad } = useLocalStorage('inbound_tracking_list', []);
+const { trackingNoList, addItem, removeItem, clearData, autoLoad } = useLocalStorage('outbound_tracking_list', []);
 autoLoad();
 
 const handleDelete = (index) => {
