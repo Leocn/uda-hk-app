@@ -5,7 +5,7 @@
     </view>
     <view class="login">
       <view class="input">
-        <up-input v-model="form.mobile" shape="circle" type="number" placeholder="请输入手机号码" />
+        <up-input v-model="form.mobile" shape="circle" type="number" placeholder="请输入账号" />
       </view>
       <view class="input">
         <up-input v-model="form.validateNo" shape="circle" type="number" placeholder="请输入密码" />
@@ -182,12 +182,11 @@ page {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 20rpx 40rpx;
   .login {
     display: flex;
     flex-direction: column;
     height: 60vh;
-    padding: 40rpx 20rpx 20rpx;
+    padding: 40rpx;
 
     .input {
       // width: 100%;
@@ -223,11 +222,13 @@ page {
 
 .logo {
   flex: 1;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fcc800;
   image {
     width: 410rpx;
     height: 110rpx;
-    margin-top: 15vh;
   }
 }
 

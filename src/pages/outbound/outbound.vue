@@ -48,7 +48,7 @@
     </view>
     <view class="inbound-upload">
       <up-button
-        text="确认上传"
+        text="上传"
         shape="circle"
         :custom-style="{ color: '#222', backgroundColor: '#fcc800' }"
         @tap="handleUpload"

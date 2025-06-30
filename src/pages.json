@@ -41,7 +41,8 @@
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#FCC800"
 			}
 		},
 		{

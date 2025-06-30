@@ -2,9 +2,9 @@
 import { requestInterceptors, responseInterceptors } from './interceptors.js';
 import { http } from 'uview-plus';
 
-const isMp = process.env.UNI_PLATFORM && process.env.UNI_PLATFORM.startsWith('mp');
+const isH5 = process.env.UNI_PLATFORM && process.env.UNI_PLATFORM.startsWith('h5');
 const config = {
-  baseURL: isMp ? import.meta.env.VITE_APP_BASE_URL_MP : import.meta.env.VITE_APP_BASE_URL,
+  baseURL: isH5 ? import.meta.env.VITE_APP_BASE_URL_H5 : import.meta.env.VITE_APP_BASE_URL,
 };
 
 //  初始化请求配置
