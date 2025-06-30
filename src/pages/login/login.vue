@@ -63,7 +63,6 @@
 </template>
 
 <script setup>
-import { mobileLoginAPI, getCodeAPI, weChatLoginAPI } from '@/config/api';
 import { useMemberStore } from '@/stores';
 import { onLoad } from '@dcloudio/uni-app';
 import { reactive, ref, watch } from 'vue';

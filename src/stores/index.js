@@ -8,7 +8,3 @@ export default pinia;
 
 // 模块统一导出
 export * from './modules/member';
-export * from './modules/product';
-export * from './modules/address';
-export * from './modules/scene';
-export * from './modules/quickQuestion';
