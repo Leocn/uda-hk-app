@@ -5,10 +5,10 @@
     </view>
     <view class="login">
       <view class="input">
-        <up-input v-model="form.account" shape="circle" placeholder="请输入账号" />
+        <up-input v-model="form.account" shape="circle" placeholder="請輸入帳號" />
       </view>
       <view class="input">
-        <up-input v-model="form.password" shape="circle" placeholder="请输入密码" />
+        <up-input v-model="form.password" shape="circle" placeholder="請輸入密碼" />
       </view>
 
       <button
@@ -17,15 +17,15 @@
         type="primary"
         @tap="onSubmit"
       >
-        登录
+        登入
       </button>
 
       <!--  判断是否勾选协议 -->
       <view class="tips" :class="{ animate__shakeY: isAgreePrivacyShakeY }">
         <up-checkbox v-model:checked="isAgreePrivacy" active-color="#fcc800" name="agree" shape="circle" used-alone>
           <template #label>
-            <text>我已阅读并同意</text>
-            <navigator class="link" hover-class="none" url="/pages/login/privacy">《韵达服务条款》</navigator>
+            <text>我已閱讀並同意</text>
+            <navigator class="link" hover-class="none" url="/pages/login/privacy">《韻達服務條款》</navigator>
           </template>
         </up-checkbox>
       </view>
@@ -95,14 +95,14 @@ const checkedAgreePrivacy = async () => {
   if (!isAgreePrivacy.value) {
     uni.showToast({
       icon: 'none',
-      title: '请先阅读并勾选协议',
+      title: '請先閱讀並勾選協議',
     });
     // 震动提示
     isAgreePrivacyShakeY.value = true;
     setTimeout(() => {
       isAgreePrivacyShakeY.value = false;
     }, 500);
-    return Promise.reject(new Error('请先阅读并勾选协议'));
+    return Promise.reject(new Error('請先閱讀並勾選協議'));
   }
 };
 </script>

@@ -8,6 +8,6 @@ export const accountLoginAPI = (params, config = { custom: { auth: false, catch:
 };
 
 // 数据上传
-export const pushTrackingAPI = (params, config = { custom: { auth: false } }) => {
+export const pushTrackingAPI = (params, config = { custom: { auth: true } }) => {
   return http.post('/hkapp/popStationTrackingPush', params, config);
 };

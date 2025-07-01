@@ -2,7 +2,7 @@
   <view class="container">
     <view class="card mb-12">
       <up-cell-group :border="false">
-        <up-cell title="用户名" :value="account" :border="false"></up-cell>
+        <up-cell title="用戶名" :value="account" :border="false"></up-cell>
       </up-cell-group>
     </view>
 
@@ -11,7 +11,7 @@
       :custom-style="{ color: '#222', width: '50%' }"
       color="#fcc800"
       shape="circle"
-      text="退出登录"
+      text="退出登入"
       @click="show = true"
     ></up-button>
     <up-modal
@@ -44,7 +44,7 @@ const logout = () => {
 };
 
 const show = ref(false);
-const content = ref('是否确定退出登录？');
+const content = ref('是否確定退出登入？');
 </script>
 
 <style lang="scss" scoped>

@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/miniprogram/api/': {
-        target: 'https://uda-products.yundasys.com',
+        target: 'https://u-udaproducts.jxnq.net/',
         changeOrigin: true,
       },
     },

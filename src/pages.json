@@ -35,7 +35,7 @@
 		{
 			"path": "pages/performance/performance",
 			"style": {
-				"navigationBarTitleText": "业绩"
+				"navigationBarTitleText": "業績"
 			}
 		},
 		{
@@ -60,19 +60,19 @@
 		{
 			"path": "pages/setting/setting",
 			"style": {
-				"navigationBarTitleText": "设置"
+				"navigationBarTitleText": "設置"
 			}
 		},
 		{
 			"path": "pages/inbound/inbound",
 			"style": {
-				"navigationBarTitleText": "入库"
+				"navigationBarTitleText": "入庫"
 			}
 		},
 		{
 			"path": "pages/outbound/outbound",
 			"style": {
-				"navigationBarTitleText": "出库"
+				"navigationBarTitleText": "出庫"
 			}
 		}
 	],
@@ -86,7 +86,7 @@
 				"pagePath": "pages/index/index",
 				"iconPath": "static/image/home.png",
 				"selectedIconPath": "static/image/on_home.png",
-				"text": "首页"
+				"text": "首頁"
 			},
 			{
 				"pagePath": "pages/parcel/parcel",
@@ -104,7 +104,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "韵达国际",
+		"navigationBarTitleText": "韻達國際",
 		"navigationBarBackgroundColor": "#FFF",
 		"backgroundColor": "#F8F8F8"
 	},

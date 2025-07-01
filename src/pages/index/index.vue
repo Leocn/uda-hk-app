@@ -18,12 +18,12 @@
 
     <view class="index-action">
       <view class="index-action-item card" @click="navigateToPage('/pages/inbound/inbound')">
-		<image src="/static/image/inbound.png" style="height: 48px; width: 48px"></image>
-        <view class="text">入库</view>
+        <image src="/static/image/inbound.png" style="height: 48px; width: 48px"></image>
+        <view class="text">入庫</view>
       </view>
       <view class="index-action-item card" @click="navigateToPage('/pages/outbound/outbound')">
-		<image src="/static/image/outbound.png" style="height: 48px; width: 48px"></image>
-        <view class="text">出库</view>
+        <image src="/static/image/outbound.png" style="height: 48px; width: 48px"></image>
+        <view class="text">出庫</view>
       </view>
     </view>
   </view>
@@ -39,15 +39,15 @@ const bannerList = reactive(['/static/image/slider_1.jpg']);
 
 const statisticList = reactive([
   {
-    title: '今日已入库',
+    title: '今日已入庫',
     value: 0,
   },
   {
-    title: '今日库存量',
+    title: '今日庫存量',
     value: 0,
   },
   {
-    title: '今日出库量',
+    title: '今日出庫量',
     value: 0,
   },
 ]);
