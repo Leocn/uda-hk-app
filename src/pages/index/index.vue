@@ -30,10 +30,26 @@
 </template>
 
 <script setup>
-import { onLoad } from '@dcloudio/uni-app';
-import { ref, reactive, computed, nextTick } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { onShow } from '@dcloudio/uni-app';
 import { navigateToPage } from '@/util';
 import { useMemberStore } from '@/stores';
+import { getParcelStatisticsAPI } from '@/config/api.js';
+
+const getParcelStatistics = async () => {
+  try {
+    const res = await getParcelStatisticsAPI();
+    statisticList[0].value = res.todayInCnt;
+    statisticList[1].value = res.totalPendingOutCnt;
+    statisticList[2].value = res.todayOutCnt;
+  } catch (error) {
+    console.error('获取数据统计失败:', error);
+  }
+};
+
+onShow(() => {
+  getParcelStatistics();
+});
 
 const bannerList = reactive(['/static/image/slider_1.jpg']);
 

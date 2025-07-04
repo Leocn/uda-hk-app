@@ -1,39 +1,68 @@
 <template>
-  <view class="outbound">
-    <view id="scanner" class="outbound-scan"> </view>
-    <view class="outbound-content">
-      <view class="outbound-input">
-        <view class="outbound-input-label">運單號</view>
-        <up-input
-          v-model="trackingNo"
-          class="up-input"
-          type="number"
-          font-size="18px"
-          placeholder="輸入運單號"
-          border="surround"
-          color="#ff0000"
-          clearable
-          :custom-style="getInputStyle('trackingNo')"
+  <view class="outbound warehouse-page">
+    <view v-show="currentTab === 1" id="scanner" class="warehouse-scan"> </view>
+    <view class="warehouse-content">
+      <view class="warehouse-content-tabs">
+        <view
+          v-for="item in tabList"
+          :key="item.id"
+          :class="['warehouse-content-tab', currentTab === item.id ? 'active-tab' : 'inactive-tab']"
+          @tap="handleChangeTab(item.id)"
         >
-          <template #suffix>
-            <image
-              style="width: 32px; height: 32px"
-              mode="aspectFill"
-              src="/static/image/scan.png"
-              @tap="triggerScan"
-            ></image>
-          </template>
-        </up-input>
+          {{ item.name }}
+          <image
+            v-if="currentTab === item.id"
+            src="/static/image/smile.png"
+            style="height: 16px; width: 16px"
+            mode="scaleToFill"
+          />
+        </view>
       </view>
-      <view class="outbound-confirm">
-        <up-button
-          text="確認"
-          shape="circle"
-          :custom-style="{ color: '#222', backgroundColor: '#fcc800' }"
-          @tap="handleConfirm"
-        ></up-button>
+      <view v-show="currentTab === 1" class="warehouse-input-group">
+        <view class="warehouse-input" @tap="triggerScan">
+          <view class="warehouse-input-label">運單號</view>
+          <up-input
+            v-model="trackingNo"
+            class="up-input"
+            type="number"
+            font-size="18px"
+            placeholder="掃描運單號"
+            border="surround"
+            color="#ff0000"
+            readonly
+            clearable
+            suffix-icon="scan"
+            suffix-icon-style="color: #222"
+            :custom-style="getInputStyle('trackingNo')"
+          >
+          </up-input>
+        </view>
       </view>
-      <view v-if="trackingNoList.length > 0" class="outbound-table">
+      <view v-show="currentTab === 2" class="warehouse-input-group">
+        <view class="warehouse-input">
+          <view class="warehouse-input-label">運單號</view>
+          <up-input
+            v-model="trackingNo"
+            class="up-input"
+            type="number"
+            font-size="18px"
+            placeholder="輸入運單號"
+            border="surround"
+            color="#ff0000"
+            clearable
+          >
+          </up-input>
+        </view>
+        <view class="warehouse-confirm">
+          <up-button
+            text="確認"
+            shape="circle"
+            :custom-style="{ color: '#222', backgroundColor: '#fcc800' }"
+            @tap="handleConfirm"
+          ></up-button>
+        </view>
+      </view>
+      <view v-if="trackingNoList.length > 0" class="warehouse-table">
         <scroll-view scroll-y="true" style="max-height: 200px">
           <uni-table ref="table" border stripe>
             <uni-tr>
@@ -45,7 +74,7 @@
                 {{ item.trackingNo }}
               </uni-td>
               <uni-td align="center">
-                <view class="outbound-table-button">
+                <view class="warehouse-table-button">
                   <up-icon name="trash" color="#FF0000" size="18" @click="handleDelete(index)"></up-icon>
                 </view>
               </uni-td>
@@ -55,15 +84,28 @@
       </view>
     </view>
 
-    <view class="outbound-upload">
+    <view class="warehouse-upload">
       <view class="aggregate">{{ '合計：' + trackingNoList.length }}</view>
-      <up-button
-        text="上傳"
-        shape="circle"
-        :custom-style="{ color: '#222', backgroundColor: '#fcc800' }"
-        @tap="handleUpload"
-      ></up-button>
+      <view class="upload-button">
+        <up-button
+          text="上傳"
+          shape="circle"
+          :custom-style="{ color: '#222', backgroundColor: '#fcc800' }"
+          @tap="handleUpload"
+        ></up-button>
+      </view>
     </view>
+    <up-modal
+      :show="showDeleteModal"
+      title="提示"
+      content="確認刪除嗎？"
+      confirm-color="#ff0000"
+      content-text-align="center"
+      width="450rpx"
+      :show-cancel-button="true"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    ></up-modal>
   </view>
 </template>
 
@@ -75,6 +117,19 @@ import { pushTrackingAPI } from '@/config/api.js';
 const { trackingNoList, addItem, removeItem, saveToLocal, autoLoad } = useLocalStorage('outbound_tracking_list', []);
 autoLoad();
 
+const currentTab = ref(1); // 默認選中第一個tab
+const tabList = reactive([
+  { id: 1, name: '单个扫描' },
+  { id: 2, name: '手动输入' },
+]);
+const handleChangeTab = (id) => {
+  currentTab.value = id;
+  if (id === 1) {
+    openScanner();
+  } else {
+    closeScanner();
+  }
+};
 const scannerVisible = ref(false);
 let scan = null;
 
@@ -93,17 +148,16 @@ const openScanner = () => {
     top: '0px',
     left: '0px',
     width: '100%',
-    height: '250px',
+    height: '280px',
     position: 'static',
     frameColor: '#fcc800',
     scanbarColor: '#fcc800',
     background: '#000000',
-    autoZoom: false,
+    autoZoom: true,
   });
 
   scan.onmarked = (type, result) => {
-    trackingNo.value = result;
-    handleConfirm();
+    handleScanConfirm(result);
 
     // 繼續掃描
     setTimeout(() => {
@@ -137,17 +191,29 @@ const closeScanner = () => {
 
 const trackingNo = ref('');
 const currentScanField = ref('trackingNo');
-const onInputFocus = (field) => {
-  currentScanField.value = field;
-};
 
 const getInputStyle = (field) => {
   return {
     borderColor: currentScanField.value === field ? '#ffc800 !important' : '#e5e5e5',
   };
 };
+const showDeleteModal = ref(false);
+const deleteIndex = ref(null);
+
 const handleDelete = (index) => {
-  removeItem(index);
+  showDeleteModal.value = true;
+  deleteIndex.value = index;
+};
+
+const confirmDelete = () => {
+  removeItem(deleteIndex.value);
+  showDeleteModal.value = false;
+  deleteIndex.value = null;
+};
+
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  deleteIndex.value = null;
 };
 
 const formatDateTime = () => {
@@ -165,10 +231,22 @@ const formatDateTime = () => {
 const triggerScan = () => {
   currentScanField.value = field;
 };
+const handleScanConfirm = (result) => {
+  if (!/^76\d{11}$/.test(result)) {
+    uni.showToast({
+      title: '運單號必須為76開頭且為13位數字',
+      icon: 'none',
+    });
+    return;
+  }
+  trackingNo.value = result;
+  updateTrackingNoList();
+};
+
 const handleConfirm = () => {
   if (!trackingNo.value) {
     uni.showToast({
-      title: '請填寫完整資訊',
+      title: '請填寫運單號',
       icon: 'none',
     });
     return;
@@ -181,19 +259,23 @@ const handleConfirm = () => {
     });
     return;
   }
+  updateTrackingNoList();
+};
+
+const updateTrackingNoList = () => {
   const exists = trackingNoList.some((item) => item.trackingNo === trackingNo.value);
   if (!exists) {
     addItem({
       trackingNo: trackingNo.value,
       scanTime: formatDateTime(),
     });
-    trackingNo.value = '';
   } else {
     uni.showToast({
       title: '運單號已存在',
       icon: 'none',
     });
   }
+  trackingNo.value = '';
 };
 const handleUpload = async () => {
   try {
@@ -231,6 +313,7 @@ const handleUpload = async () => {
       icon: 'none',
     });
   } finally {
+    trackingNo.value = '';
     uni.hideLoading();
   }
 };
@@ -240,49 +323,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/warehouse-common.scss';
+
 .outbound {
-}
-.outbound-scan {
-  width: 100%;
-  height: 240px;
-  background: #000;
-}
-.outbound-content {
-  margin: 15px;
-}
-.outbound-input {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.outbound-input-label {
-  width: 60px;
-}
-.up-input {
-  flex: 1;
-  background: #fff;
-}
-.outbound-confirm {
-  margin-top: 20px;
-}
-.outbound-table {
-  margin-top: 12px;
-}
-.outbound-table-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.outbound-upload {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  width: 100px;
-}
-.aggregate {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 0;
-  font-size: 14px;
 }
 </style>

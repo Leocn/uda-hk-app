@@ -43,22 +43,18 @@
 <script setup>
 import { useMemberStore } from '@/stores';
 import { onLoad } from '@dcloudio/uni-app';
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { accountLoginAPI } from '@/config/api';
 import md5 from 'js-md5';
 
 // 表单登录
 const form = reactive({
-  account: '',
-  password: '',
+  account: 'uda',
+  password: '!testuda123',
 });
-const disabled = ref(true);
-watch([() => form.account, () => form.password], ([newM, newV]) => {
-  if (newM && newV) {
-    disabled.value = false;
-  } else {
-    disabled.value = true;
-  }
+
+const disabled = computed(() => {
+  return !form.account || !form.password;
 });
 
 // 表单提交

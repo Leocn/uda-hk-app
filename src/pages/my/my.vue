@@ -1,5 +1,5 @@
 <template>
-  <View class="my">
+  <view class="my">
     <view class="top">
       <view class="profile">
         <!-- 已登录 -->
@@ -37,7 +37,7 @@
         </up-cell>
       </up-cell-group>
     </view>
-  </View>
+  </view>
 </template>
 
 <script setup>
