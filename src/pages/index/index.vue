@@ -59,7 +59,7 @@ const statisticList = reactive([
     value: 0,
   },
   {
-    title: '今日庫存量',
+    title: '庫存量',
     value: 0,
   },
   {
