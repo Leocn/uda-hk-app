@@ -45,13 +45,18 @@
             v-model="trackingNo"
             class="up-input"
             type="number"
+            maxlength="13"
             font-size="18px"
             placeholder="輸入運單號"
             border="surround"
-            color="#ff0000"
             clearable
+            @change="handleTrackingNo"
           >
           </up-input>
+        </view>
+        <view class="warehouse-input">
+          <view class="warehouse-input-label"></view>
+          <view class="warehouse-input-content">{{ formattedTrackingNo }}</view>
         </view>
         <view class="warehouse-confirm">
           <up-button
@@ -123,13 +128,21 @@ const tabList = reactive([
   { id: 2, name: '手動輸入' },
 ]);
 const handleChangeTab = (id) => {
+  clearForm();
+  formattedTrackingNo.value = '';
+
   currentTab.value = id;
+
   if (id === 1) {
     openScanner();
   } else {
     closeScanner();
   }
 };
+const clearForm = () => {
+  trackingNo.value = '';
+};
+
 const scannerVisible = ref(false);
 let scan = null;
 
@@ -153,7 +166,7 @@ const openScanner = () => {
     frameColor: '#fcc800',
     scanbarColor: '#fcc800',
     background: '#000000',
-    autoZoom: true,
+    autoZoom: false,
   });
 
   scan.onmarked = (type, result) => {
@@ -164,7 +177,7 @@ const openScanner = () => {
       if (scan) {
         scan.start();
       }
-    }, 500);
+    }, 1000);
   };
 
   scan.onerror = (error) => {
@@ -190,7 +203,20 @@ const closeScanner = () => {
 };
 
 const trackingNo = ref('');
+const formattedTrackingNo = ref('');
+
 const currentScanField = ref('trackingNo');
+
+const handleTrackingNo = (value) => {
+  // 移除所有非数字字符
+  const numbers = value.replace(/\D/g, '');
+
+  // 每4位添加横杠
+  const formatted = numbers.replace(/(\d{4})/g, '$1-');
+
+  // 移除末尾的横杠（如果有的话）
+  formattedTrackingNo.value = formatted.replace(/-$/, '');
+};
 
 const getInputStyle = (field) => {
   return {
@@ -275,7 +301,8 @@ const updateTrackingNoList = () => {
       icon: 'none',
     });
   }
-  trackingNo.value = '';
+  clearForm();
+  formattedTrackingNo.value = '';
 };
 const handleUpload = async () => {
   try {
@@ -313,7 +340,7 @@ const handleUpload = async () => {
       icon: 'none',
     });
   } finally {
-    trackingNo.value = '';
+    clearForm();
     uni.hideLoading();
   }
 };

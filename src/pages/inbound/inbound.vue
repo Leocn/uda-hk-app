@@ -73,13 +73,18 @@
             v-model="trackingNo"
             class="up-input"
             type="number"
+            maxlength="13"
             font-size="18px"
             placeholder="輸入運單號"
             border="surround"
-            color="#ff0000"
             clearable
+            @change="handleTrackingNo"
           >
           </up-input>
+        </view>
+        <view class="warehouse-input">
+          <view class="warehouse-input-label"></view>
+          <view class="warehouse-input-content">{{ formattedTrackingNo }}</view>
         </view>
         <view class="warehouse-confirm">
           <up-button
@@ -154,6 +159,9 @@ const tabList = reactive([
   { id: 2, name: '手動輸入' },
 ]);
 const handleChangeTab = (id) => {
+  clearForm();
+  formattedTrackingNo.value = '';
+
   currentTab.value = id;
   if (id === 1) {
     openScanner();
@@ -166,7 +174,24 @@ const scannerVisible = ref(false);
 let scan = null;
 const shelfNumber = ref('');
 const trackingNo = ref('');
+const formattedTrackingNo = ref('');
 const currentScanField = ref('shelfNumber');
+
+const clearForm = () => {
+  shelfNumber.value = '';
+  trackingNo.value = '';
+};
+
+const handleTrackingNo = (value) => {
+  // 移除所有非数字字符
+  const numbers = value.replace(/\D/g, '');
+
+  // 每4位添加横杠
+  const formatted = numbers.replace(/(\d{4})/g, '$1-');
+
+  // 移除末尾的横杠（如果有的话）
+  formattedTrackingNo.value = formatted.replace(/-$/, '');
+};
 
 onMounted(() => {
   // 頁面加載完成後自動打開掃描器
@@ -188,12 +213,13 @@ const openScanner = () => {
     frameColor: '#fcc800', // 掃描框邊框顏色
     scanbarColor: '#fcc800', // 掃描線顏色
     background: '#000000', // 背景顏色
-    autoZoom: true,
+    autoZoom: false,
   });
 
   scan.onmarked = (type, result) => {
     if (currentScanField.value === 'shelfNumber') {
       shelfNumber.value = result;
+      currentScanField.value = 'trackingNo'; // 切換到運單號掃描
     } else if (currentScanField.value === 'trackingNo') {
       handleScanConfirm(result);
     }
@@ -203,7 +229,7 @@ const openScanner = () => {
       if (scan) {
         scan.start();
       }
-    }, 500);
+    }, 1000);
   };
 
   scan.onerror = (error) => {
@@ -324,6 +350,7 @@ const updateTrackingNoList = () => {
     });
   }
   trackingNo.value = '';
+  formattedTrackingNo.value = '';
 };
 const handleUpload = async () => {
   try {
@@ -360,8 +387,8 @@ const handleUpload = async () => {
       icon: 'none',
     });
   } finally {
-    trackingNo.value = '';
-    shelfNumber.value = '';
+    currentScanField.value = 'shelfNumber'; // 重置掃描字段
+    clearForm();
     uni.hideLoading();
   }
 };
