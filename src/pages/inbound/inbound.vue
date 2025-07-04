@@ -150,8 +150,8 @@ autoLoad();
 
 const currentTab = ref(1); // 默認選中第一個tab
 const tabList = reactive([
-  { id: 1, name: '单个扫描' },
-  { id: 2, name: '手动输入' },
+  { id: 1, name: '掃描' },
+  { id: 2, name: '手動輸入' },
 ]);
 const handleChangeTab = (id) => {
   currentTab.value = id;

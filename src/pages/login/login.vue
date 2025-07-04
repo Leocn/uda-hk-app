@@ -49,8 +49,8 @@ import md5 from 'js-md5';
 
 // 表单登录
 const form = reactive({
-  account: 'uda',
-  password: '!testuda123',
+  account: '',
+  password: '',
 });
 
 const disabled = computed(() => {

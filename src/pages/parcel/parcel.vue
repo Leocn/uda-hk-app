@@ -69,8 +69,8 @@ onShow(() => {
 
 const keyword = ref('');
 const sectionList = ref([
-  { id: 1, name: '已入库', status: 1 },
-  { id: 2, name: '已出库', status: 2 },
+  { id: 1, name: '已入庫', status: 1 },
+  { id: 2, name: '已出庫', status: 2 },
 ]);
 // 状态映射对象
 const statusMap = {
@@ -149,6 +149,28 @@ const formatDateTime = () => {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 const handleOutbound = async (item) => {
+  // 添加確認對話框
+  const confirmResult = await new Promise((resolve) => {
+    uni.showModal({
+      title: '提示',
+      content: `確定要將運單號 ${item.trackingNo} 的包裹出庫嗎？`,
+      confirmText: '確定出庫',
+      confirmColor: '#ff0000',
+      cancelText: '取消',
+      success: (res) => {
+        resolve(res.confirm);
+      },
+      fail: () => {
+        resolve(false);
+      },
+    });
+  });
+
+  // 如果用戶取消，直接返回
+  if (!confirmResult) {
+    return;
+  }
+
   try {
     uni.showLoading({
       title: '出庫中...',
