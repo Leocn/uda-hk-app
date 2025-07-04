@@ -13,6 +13,7 @@ dist
 *.local
 project.*
 .nvmrc
+unpackages
 
 # Editor directories and files
 .vscode
